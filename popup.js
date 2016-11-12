@@ -86,6 +86,15 @@ function getImageUrl(searchTerm, callback, errorCallback) {
     errorCallback('Network error.');
   };
   x.send();
+
+
+  // console.log(url);
+  // var split = url.split('/');
+  // var end = split[5].split('_');
+  // end[2] = Number(end[2]) + 1;
+  // var nextGuess = split[0] + '/' + split[1] + '/' + split[2] + '/' + split[3] + '/' + split[4] + '/' + end[0] + '_' + end[1] + '_' + end[2] + '_' + end[3];
+  // console.log(nextGuess);
+  // window.location.navigate(nextGuess);
 }
 
 function renderStatus(statusText) {
@@ -96,31 +105,38 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(getCurrentTabUrl(function(url) {
     // Put the image URL in Google search.
 
-    // renderStatus('Performing Google Image search for ' + url);
+    renderStatus('Performing Google Image search for ' + url);
 
-    // getImageUrl(url, function(imageUrl, width, height) {
+    getImageUrl(url, function(imageUrl, width, height) {
 
-    //   renderStatus('Search term: ' + url + '\n' +
-    //       'Google image search result: ' + imageUrl);
-    //   var imageResult = document.getElementById('image-result');
-    //   // Explicitly set the width/height to minimize the number of reflows. For
-    //   // a single image, this does not matter, but if you're going to embed
-    //   // multiple external images in your page, then the absence of width/height
-    //   // attributes causes the popup to resize multiple times.
-    //   imageResult.width = width;
-    //   imageResult.height = height;
-    //   imageResult.src = imageUrl;
-    //   imageResult.hidden = false;
+      renderStatus('Search term: ' + url + '\n' +
+          'Google image search result: ' + imageUrl);
+      var imageResult = document.getElementById('image-result');
+      // Explicitly set the width/height to minimize the number of reflows. For
+      // a single image, this does not matter, but if you're going to embed
+      // multiple external images in your page, then the absence of width/height
+      // attributes causes the popup to resize multiple times.
+      imageResult.width = width;
+      imageResult.height = height;
+      imageResult.src = imageUrl;
+      imageResult.hidden = false;
 
-    // }, function(errorMessage) {
-    //   renderStatus('Cannot display image. ' + errorMessage);
-    // });
-    console.log(url);
-    var split = url.split('/');
-    var end = split[5].split('_');
-    end[2] = Number(end[2]) + 1; 
-    var nextGuess = split[0] + '/' + split[1] + '/' + split[2] + '/' + split[3] + '/' + split[4] + '/' + end[0] + '_' + end[1] + '_' + end[2] + '_' + end[3];
-    console.log(nextGuess);
-    window.location.navigate(nextGuess);
+    }, function(errorMessage) {
+      renderStatus('Cannot display image. ' + errorMessage);
+    });
   }), 1000);
+
+  var someVar = {text: 'test', foo: 1, bar: false};
+  chrome.tabs.executeScript({
+    code: '(' + function(params) {
+      document.body.insertAdjacentHTML("<script>$('#page-container').remove()</script>"
+      );
+      return {success: true, html: document.body.innerHTML};
+    } + ')(' + JSON.stringify(someVar) + ');'
+  }, function(results) {
+    console.log('here!!!!!!!!!!!!!!')
+    console.log(results[0]);
+  });
+
+
 });
