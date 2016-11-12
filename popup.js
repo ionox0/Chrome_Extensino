@@ -102,6 +102,8 @@ function renderStatus(statusText) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+
+
   setTimeout(getCurrentTabUrl(function(url) {
     // Put the image URL in Google search.
 
@@ -109,8 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     getImageUrl(url, function(imageUrl, width, height) {
 
-      renderStatus('Search term: ' + url + '\n' +
-          'Google image search result: ' + imageUrl);
+      renderStatus('Search term: ' + url + '\n' + 'Google image search result: ' + imageUrl);
       var imageResult = document.getElementById('image-result');
       // Explicitly set the width/height to minimize the number of reflows. For
       // a single image, this does not matter, but if you're going to embed
@@ -126,15 +127,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }), 1000);
 
+
   var someVar = {text: 'test', foo: 1, bar: false};
   chrome.tabs.executeScript({
     code: '(' + function(params) {
-      document.body.insertAdjacentHTML("<script>$('#page-container').remove()</script>"
-      );
+      // document.body.insertAdjacentHTML("<script>$('#page-container').remove()</script>");
+      // document.body.insertAdjacentHTML('afterend', "<script>console.log('asdf');</script>");
+      console.log('here');
+      document.getElementById('early-body').insertAdjacentHTML('afterend', "<script>$('#page').remove();</script>");
+
       return {success: true, html: document.body.innerHTML};
     } + ')(' + JSON.stringify(someVar) + ');'
   }, function(results) {
-    console.log('here!!!!!!!!!!!!!!')
     console.log(results[0]);
   });
 
